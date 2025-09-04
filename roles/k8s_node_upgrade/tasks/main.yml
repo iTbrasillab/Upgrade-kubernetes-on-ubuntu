@@ -1,0 +1,21 @@
+---
+- name: configure kubernetes repo 
+  ansible.builtin.include_tasks: repos.yml
+  tags: [repos]
+
+- name: Install kubeadm target version
+  ansible.builtin.include_tasks: kubeadm.yml
+  tags: [kubeadm]
+
+- name: Execute "kubeadm upgrade node"
+  ansible.builtin.include_tasks: kubeadm_upgrade_node.yml
+  tags: [kubeadm, upgrade]
+
+- name: Install kubelet/kubectl and restart kubelet
+  ansible.builtin.include_tasks: kubelet_kubectl.yml
+  tags: [kubelet, kubectl]
+
+- name: Set hold on packets
+  ansible.builtin.include_tasks: hold.yml
+  tags: [hold]
+

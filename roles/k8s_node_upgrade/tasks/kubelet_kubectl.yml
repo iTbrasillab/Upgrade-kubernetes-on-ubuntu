@@ -1,0 +1,22 @@
+---
+- name: Install kubelet/kubectl version {{ k8s_pkg_version }}
+  ansible.builtin.apt:
+    name:
+      - "kubelet={{ k8s_pkg_version }}"
+      - "kubectl={{ k8s_pkg_version }}"
+    state: present
+    force_apt_get: true
+    update_cache: false
+
+- name: systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart kubelet (handler)
+  ansible.builtin.meta: flush_handlers
+
+- name: Restart kubelet explicitly
+  ansible.builtin.service:
+    name: kubelet
+    state: restarted
+    enabled: true

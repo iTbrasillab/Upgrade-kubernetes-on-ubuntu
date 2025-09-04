@@ -1,0 +1,7 @@
+- name: Upgrade worker nodes via kubeadm
+  hosts: k8s_nodes
+  become: true
+  gather_facts: false
+
+  roles:
+    - role: k8s_node_upgrade

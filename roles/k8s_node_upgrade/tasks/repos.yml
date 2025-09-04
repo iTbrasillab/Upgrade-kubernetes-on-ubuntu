@@ -1,0 +1,46 @@
+---
+- name: remove hold if present kubeadm/kubelet/kubectl 
+  ansible.builtin.shell: |
+    set -e
+    apt-mark unhold kubeadm kubelet kubectl || true
+
+- name: coment old apt.kubernetes.io repo if exist
+  ansible.builtin.replace:
+    path: "{{ old_repo_list }}"
+    regexp: '^\s*deb'
+    replace: '# deb'
+  ignore_errors: true
+
+- name: create keyring dir
+  ansible.builtin.file:
+    path: "/etc/apt/keyrings"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: download {{ k8s_minor }} release.key
+  ansible.builtin.get_url:
+    url: "https://pkgs.k8s.io/core:/stable:/{{ k8s_minor }}/deb/Release.key"
+    dest: "/tmp/kubernetes-{{ k8s_minor }}-Release.key"
+    mode: "0644"
+
+- name: Converte keyring to GPG
+  ansible.builtin.shell: |
+    set -e
+    gpg --dearmor -o "{{ k8s_keyring }}" "/tmp/kubernetes-{{ k8s_minor }}-Release.key"
+  args:
+    creates: "{{ k8s_keyring }}"
+
+- name: install sources list {{ k8s_minor }}
+  ansible.builtin.template:
+    src: "kubernetes-stable.list.j2"
+    dest: "{{ k8s_repo_list }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: apt update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 0

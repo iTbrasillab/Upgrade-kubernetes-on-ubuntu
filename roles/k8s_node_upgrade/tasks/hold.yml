@@ -1,0 +1,5 @@
+---
+- name: Set hold
+  ansible.builtin.shell: |
+    set -e
+    apt-mark hold kubeadm kubelet kubectl

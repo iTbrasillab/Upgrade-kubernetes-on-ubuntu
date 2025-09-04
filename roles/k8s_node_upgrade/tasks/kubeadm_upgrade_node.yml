@@ -1,0 +1,8 @@
+---
+- name: Executar kubeadm upgrade node
+  ansible.builtin.command:
+    cmd: "kubeadm upgrade node"
+  register: upgrade_node
+  changed_when: >
+    (upgrade_node.rc == 0) and
+    ("already at the latest version" not in upgrade_node.stdout | default(""))

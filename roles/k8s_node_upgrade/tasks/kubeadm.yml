@@ -1,0 +1,7 @@
+---
+- name: Install kubeadm on version {{ k8s_pkg_version }}
+  ansible.builtin.apt:
+    name: "kubeadm={{ k8s_pkg_version }}"
+    state: present
+    force_apt_get: true
+    update_cache: false
