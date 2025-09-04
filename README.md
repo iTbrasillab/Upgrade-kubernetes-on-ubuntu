@@ -45,7 +45,7 @@ Upgrade Kubernetes **worker nodes** and **secondary control-plane nodes** (kubea
 ---
 
 ## Project Layout
-
+```text
 ansible-k8s-upgrade/
 ├── ansible.cfg
 ├── inventory.ini
@@ -68,7 +68,7 @@ ansible-k8s-upgrade/
 │ └── hold.yml
 └── templates/
 └── kubernetes-stable.list.j2
-
+```
 
 
 > Make sure `roles_path = ./roles` is set in `ansible.cfg`, or run from the repo root.
